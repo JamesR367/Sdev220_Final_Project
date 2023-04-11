@@ -38,7 +38,7 @@ class App:
         quantity = self.quantity_entry.get()
 
         if product_name and serial_number and quantity:
-            self.entries.append((product_name, serial_number, quantity))
+            self.entries.append((product_name, "-", serial_number, "-", quantity))
             self.product_entry.delete(0, tk.END)
             self.serial_entry.delete(0, tk.END)
             self.quantity_entry.delete(0, tk.END)
