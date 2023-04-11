@@ -68,7 +68,15 @@ class App:
             self.entries.pop(selected[0])
 
             self.show_entries()
-
+    
+    def search_entry(self):
+        search_term = self.product_entry.get()
+        if search_term:
+            search_results = [entry for entry in self.entries if search_term.lower() in entry[0].lower()]
+            self.table.delete(0, tk.END)
+            for i, entry in enumerate(search_results):
+                self.table.insert(i, entry)
+                
     def show_entries(self):
         
         self.table.delete(0, tk.END)
