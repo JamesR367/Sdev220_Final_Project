@@ -110,6 +110,7 @@ def write_excel():
     tools_df = pd.DataFrame(tools_list, columns=['Item', 'Brand', 'Qty'])
     hardware_df = pd.DataFrame(hardware_list, columns=['Item', 'Brand', 'Qty'])
     lumber_df = pd.DataFrame(lumber_list, columns=['Wood', 'Cut', 'Qty'])
+    display_label.config(text=f' ')
     # opening inventory.xlsx file and writing contents to it, each class gets its own sheet for organization
     with pd.ExcelWriter('inventory.xlsx') as writer:
         tools_df.to_excel(writer, sheet_name='Tools')
@@ -122,6 +123,11 @@ def open_excel():
     inventory = openpyxl.load_workbook('inventory.xlsx')
     inventory.save('inventory.xlsx')
     os.system('start EXCEL.EXE inventory.xlsx')
+
+def exit():
+    inventory = openpyxl.load_workbook('inventory.xlsx')
+    inventory.close()
+    window.destroy
 
 # defining main Tkinter window
 window = Tk()
@@ -168,25 +174,25 @@ catagory_drop.grid(row=0, column=1, sticky=W, pady=2)
 
 # entry box for item, then grid placement
 item_entry = Entry(window, font=main_font)
-item_entry.grid(row=1, column=1, sticky=W, pady=2)
+item_entry.place(in_=item_label,relx=.45, x=20, width= 225)
 
 # entry box for brand, then grid placement
 brand_entry = Entry(window, font=main_font)
-brand_entry.grid(row=2, column=1, sticky=W, pady=2)
+brand_entry.place(in_=brand_label,relx=.6, x=20, width= 225)
 
 # entry box for quantity, then grid placement
 qty_entry = Entry(window, font=main_font)
-qty_entry.grid(row=3, column=1, sticky=W, pady=2)
+qty_entry.place(in_=qty_label,relx=.7, x=20, width= 225)
+#.grid(row=3, column=1, sticky=W, pady=2)
 
 # add button to add the current entry field text to the appropriate list (tools, hardware or lumber), then grid placement
 # this button calls the update_list function
 add_button = Button(window, command=update_list, text='Add', font=main_font)
-add_button.grid(row=4, column=1, pady=2, padx=2)
-
+add_button.place(in_=qty_entry,relx=.1, x=20, rely=2.0, width= 100)
 # creating clear button to remove user input from entry boxes, then grid placement
 # this button calls the clear_form function
 clear_button = Button(window, command=clear_form, text='Clear', font=main_font)
-clear_button.grid(row=5, column=1, pady=2, padx=2)
+clear_button.place(in_=qty_entry,relx=.1, x=20, rely=4.0, width= 100)
 
 # submit button was used for a while during development but the add button kind of ate its functionality, leaving here
 # just in case, uncomment next to lines to add it back
@@ -197,21 +203,24 @@ clear_button.grid(row=5, column=1, pady=2, padx=2)
 # tkinter loop is running
 # this button calls the write_excel function
 write_excel_button = Button(window, command=write_excel, text='write excel', font=main_font)
-write_excel_button.grid(row=6, column=1, pady=2)
+write_excel_button.place(in_=qty_entry,relx=.1, x=20, rely=6.0, width= 100)
 
 # open excel button should open the already written to excel sheet, however it only opens a blank one at the moment
 open_excel_button = Button(window, command=open_excel, text='open excel', font=main_font)
-open_excel_button.grid(row=7, column=1, pady=2)
+open_excel_button.place(in_=qty_entry,relx=.1, x=20, rely=8.0, width= 100)
 
 # display label is a label that starts with no text but is then updated to let the user know what contents were added
 # when the add button is pressed
 # this label is modified by the submit function
 display_label = Label(window, text='', font=main_font)
-display_label.grid(row=8, column=0, columnspan=2, pady=2)
+display_label.place(in_=qty_entry,relx=.1, rely=1.0)
 
 # a trace to watch for what the option menu item is, updates labels when lumber is the current option
 # this trace uses the update_labels_for_lumber function
 selected_catagory.trace('w', update_labels_for_lumber)
+
+# sets the minimum window size to 400 pixels by 400 pixels
+window.minsize(500, 400)
 
 # end of tkinter main loop
 window.mainloop()

@@ -61,8 +61,8 @@ class App:
            
             entry = self.entries[selected[0]]
             self.product_entry.insert(0, entry[0])
-            self.serial_entry.insert(0, entry[1])
-            self.quantity_entry.insert(0, entry[2])
+            self.serial_entry.insert(0, entry[2])
+            self.quantity_entry.insert(0, entry[4])
 
             
             self.entries.pop(selected[0])
