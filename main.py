@@ -6,6 +6,17 @@ from tkinter import *
 import pandas as pd
 import os
 import openpyxl  
+import sqlite3
+
+# creates the database and cursor object
+conn = sqlite3.connect('inventory.db')
+cur = conn.cursor()
+
+#Creates table if not created
+cur.execute('''CREATE TABLE IF NOT EXISTS myInventory (
+                itemName TEXT,
+                brand TEXT,
+                quantity INTEGER)''')
 
 # Tools class with attributes brand and quantity
 class Tools:
@@ -102,7 +113,6 @@ class App():
         self.add_button = Button(self.window, command=self.add, text='Add', font=self.main_font, width=20)
         self.add_button.grid(row=5, column=1, sticky=W, pady=2)
 
-
         # creating clear button to remove user input from entry boxes, then grid placement
         # this button calls the clear_form function
         Button(self.window, command=self.clear_form, text='Clear', font=self.main_font, width=20).grid(row=6, column=1, sticky=W, pady=2)
@@ -122,6 +132,8 @@ class App():
         item = self.item_entry.get()
         item_brand = self.brand_entry.get()
         item_qty = self.qty_entry.get()
+        cur.execute("INSERT INTO myInventory (itemName, brand, quantity) VALUES (?, ?, ?)", (item, item_brand,item_qty))
+        conn.commit()
 
         # if statement to decide which class to create: Tools, Hardware or Lumber
         # this one will create an object from the Tools class
@@ -170,7 +182,7 @@ class App():
             elif self.selected_catagory.get() == 'Lumber':
                 self.lumber_list.append(self.submit())
                 print(self.lumber_list)  # DEBUG, delete this line before turned in
-
+  
     # event function to call the add function and the clear form function, this is used to bind enter to the window, 
     # so that enter also adds to the list and clears the existing user entries and sets the cursor back to the item entry box
     def on_enter(self, event):
@@ -218,3 +230,4 @@ class App():
 window = Tk()
 app = App(window)
 window.mainloop()
+conn.close()
